@@ -7,6 +7,7 @@ import {createDropoutFilter} from '../util/dropout-filter';
 export const KEISER_LOCALNAME = "M3";
 const KEISER_VALUE_MAGIC = Buffer.from([0x02, 0x01]); // identifies Keiser data message
 const KEISER_VALUE_IDX_POWER = 10; // 16-bit power (watts) data offset within packet
+const KEISER_VALUE_IDX_HEARTRATE = 8; // 16-bit heart rate (1/10 bpm) data offset within packet
 const KEISER_VALUE_IDX_CADENCE = 6; // 16-bit cadence (1/10 rpm) data offset within packet
 const KEISER_VALUE_IDX_REALTIME = 4; // Indicates whether the data present is realtime (0, or 128 to 227)
 const KEISER_VALUE_IDX_VER_MAJOR = 2; // 8-bit Version Major data offset within packet
@@ -208,7 +209,8 @@ export function parse(data) {
       // Realtime data received
       const power = data.readUInt16LE(KEISER_VALUE_IDX_POWER);
       const cadence = Math.round(data.readUInt16LE(KEISER_VALUE_IDX_CADENCE) / 10);
-      return {type: 'stats', payload: {power, cadence}};
+      const heartrate = Math.round(data.readUInt16LE(KEISER_VALUE_IDX_HEARTRATE) / 10);
+      return {type: 'stats', payload: {power, cadence, heartrate}};
     }
   }
   throw new Error('unable to parse message');
