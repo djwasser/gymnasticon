@@ -1,5 +1,6 @@
 import {CyclingPowerService} from './services/cycling-power'
 import {CyclingSpeedAndCadenceService} from './services/cycling-speed-and-cadence'
+import {HeartrateService} from './services/heartrate'
 import {BleServer} from '../../util/ble-server'
 
 export const DEFAULT_NAME = 'Gymnasticon';
@@ -17,14 +18,15 @@ export class GymnasticonServer extends BleServer {
     super(bleno, name, [
       new CyclingPowerService(),
       new CyclingSpeedAndCadenceService(),
+      new HeartrateService()
     ])
   }
 
   /**
-   * Notify subscriber (e.g. Zwift) of new Cycling Power Measurement.
+   * Notify subscriber (e.g. Zwift) of new Measurements.
    * @param {object} measurement - new cycling power measurement.
    * @param {number} measurement.power - current power (watts)
-	 * @param {object} [measurement.crank] - last crank event.
+   * @param {object} [measurement.crank] - last crank event.
    * @param {number} measurement.crank.revolutions - revolution count at last crank event.
    * @param {number} measurement.crank.timestamp - timestamp at last crank event.
    */
