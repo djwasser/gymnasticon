@@ -2,7 +2,7 @@ import {EventEmitter} from 'events';
 import {Timer} from '../util/timer';
 import {scan, createNameFilter} from '../util/ble-scan';
 import {macAddress} from '../util/mac-address';
-import {createDropoutFilter} from '../util/dropout-filter';
+import {createDropoutFilter} from '../util/k-dropout-filter';
 
 export const KEISER_LOCALNAME = "M3";
 const KEISER_VALUE_MAGIC = Buffer.from([0x02, 0x01]); // identifies Keiser data message
@@ -125,7 +125,7 @@ export class KeiserBikeClient extends EventEmitter {
    * Set power & cadence to 0 when the bike dissapears
    */
   async onStatsTimeout() {
-    const reset = { power:0, cadence:0 };
+    const reset = { power:0, cadence:0, heartrate:0 };
     debuglog('Stats timeout exceeded');
     console.log("Stats timeout: Restarting BLE Scan");
     if (this.state === 'connected') {
